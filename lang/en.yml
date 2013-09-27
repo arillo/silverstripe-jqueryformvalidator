@@ -1,0 +1,3 @@
+en:
+  JQueryValidation:
+    DEFAULT_ERROR: 'This field is required.'
