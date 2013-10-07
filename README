@@ -23,8 +23,7 @@ Start up validation to a give form like this:
 ### JQueryValidation->generate()
 For automated creation use:
 
-	// then you can either use automated creation like this:
-	// this will inspect all form fields and add their validation methods.
+	// This will inspect all form fields and add their validation methods.
 	// It also will add required checks provided by form's RequiredFields.
 	$validation->generate();
 
@@ -43,7 +42,7 @@ If you want to provide your own validation file you can use this:
 
 	$validation->custom('path/to/your.js');
 
-	// It is also possible to provide information about which additional js files shoul be loaded, like this:
+	// It is also possible to provide information about which additional js files should be loaded, like this:
 	$validation->custom(
 		'path/to/your.js',
 		array(

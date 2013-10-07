@@ -22,7 +22,7 @@ class JQueryValidation {
 			'errorClass' => 'required', // css class for errors
 			'validClass' => 'valid', // css class for valid fields
 			'errorElement' => 'label', // html wrapper element for errors
-			'errorMessage' => 'Please check the input of this field.',
+			'errorMessage' => 'Please check the input of this field.', // default/ fallback error message
 			'ignore' => ':hidden', // selector or fields that should be ingnored
 			'required' => 'required', // css class for required fields
 			'fileMissing' => 'fileMissing',
@@ -69,7 +69,8 @@ class JQueryValidation {
 	 * $config = array(
 	 *	'additionalMethods' => true,	// load additional-methods.min.js
 	 *	'metaData' => true,				// load jquery.metadata.js
-	 *	'moment' => true 				// load moment.min.js
+	 *	'moment' => true,				// load moment.min.js
+	 *	'date' => true					// load moment.min.js
 	 * )
 	 * 
 	 * 
@@ -93,6 +94,9 @@ class JQueryValidation {
 		}
 		if (isset($config['moment']) && $config['moment']) {
 			Requirements::javascript(self::$module .'/javascript/libs/moment.min.js');
+		}
+		if (isset($config['date']) && $config['date']) {
+			Requirements::javascript(self::$module .'/javascript/libs/date.js');
 		}
 		Requirements::javascript($jsFile);
 	}
@@ -177,6 +181,7 @@ class JQueryValidation {
 						}
 						$groups[$formField->Name] = "{$field1} {$field2}";
 						break;
+
 					case 'DateField':
 						$requireExtraJs = true;
 						$rules[$formField->Name] = array(
@@ -196,6 +201,7 @@ class JQueryValidation {
 							);
 						}
 						break;
+
 					case 'DatetimeField':
 						$requireExtraJs = true;
 						$field1 = $formField->Name . '[date]';
@@ -232,6 +238,7 @@ class JQueryValidation {
 						}
 						$groups[$formField->Name] = "{$field1} {$field2}";
 						break;
+
 					case 'TimeField':
 						$requireExtraJs = true;
 						$rules[$formField->Name] = array(
@@ -251,6 +258,7 @@ class JQueryValidation {
 							);
 						}
 						break;
+
 					case 'EmailField':
 						$rules[$formField->Name] = array(
 							'required' => $required,
@@ -266,6 +274,7 @@ class JQueryValidation {
 							);
 						}
 						break;
+
 					case 'PasswordField':
 						$rules[$formField->Name] = array(
 							'required' => $required,
@@ -285,6 +294,18 @@ class JQueryValidation {
 						}
 						break;
 					case 'UploadField':
+						if ($required) {
+							$field = $formField->Name . '[Uploads][]';
+							$rules[$field] = array(
+								'required' => true
+							);
+							$messages[$field] = array(
+								'required' => sprintf(
+									_t('JQueryValidation.REQUIRED_MESSAGE', 'This field is required: %s'),
+									$formField->Title()
+								)
+							);
+						}
 						break;
 					default:
 						$rules[$formField->Name] = array(
@@ -304,7 +325,15 @@ class JQueryValidation {
 			if (count($messages)) $validation['messages'] = $messages;
 			if (count($groups)) $validation['groups'] = $groups;
 
-			$validation = array_merge($validation, $config);
+			if (isset($config['rules']) && is_array($config['rules'])) {
+				$validation['rules'] = array_merge($validation['rules'], $config['rules']);
+			}
+			if (isset($config['messages']) && is_array($config['messages'])) {
+				$validation['messages'] = array_merge($validation['messages'], $config['messages']);
+			}
+			if (isset($config['groups']) && is_array($config['groups'])) {
+				$validation['groups'] = array_merge($validation['groups'], $config['groups']);
+			}
 
 			$jsVars = array(
 				'FormID' => "#{$this->form->FormName()}",
@@ -316,18 +345,33 @@ class JQueryValidation {
 
 			// load extra js files
 			if ($requireExtraJs) {
-				$extraFiles = array(
-					self::$module .'/javascript/libs/jquery.metadata.js',
-					self::$module .'/javascript/libs/moment.min.js'
-				);
-				Requirements::combine_files('jquery.validation.extras.js', $extraFiles);
+				$this->addExtraFiles();
 			}
-
-			Requirements::javascriptTemplate(
-				self::$module .'/javascript/jquery.form.validation.js',
-				$jsVars,
-				'JQueryValidation.VALIDATOR'
-			);
+			$this->createMainJS($jsVars);
 		}
+	}
+
+	/**
+	 * Inject additional JS files
+	 */
+	protected function addExtraFiles() {
+		$extraFiles = array(
+			self::$module .'/javascript/libs/jquery.metadata.js',
+			self::$module .'/javascript/libs/moment.min.js',
+			self::$module .'/javascript/libs/date.js',
+		);
+		Requirements::combine_files('jquery.validation.extras.js', $extraFiles);
+	}
+
+	/**
+	 * Inject main validation script
+	 * @param  array $jsVars
+	 */
+	protected function createMainJS($jsVars) {
+		Requirements::javascriptTemplate(
+			self::$module .'/javascript/jquery.form.validation.js',
+			$jsVars,
+			'JQueryValidation.VALIDATOR'
+		);
 	}
 }
