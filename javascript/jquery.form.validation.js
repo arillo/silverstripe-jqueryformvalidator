@@ -18,7 +18,7 @@
 			if (fieldRule.required
 				|| (fieldRule.required == false && value)
 			) {
-				return window.moment(value, format).isValid();
+				return Date.isValid(value, format);
 			}
 			return true;
 		}, $.validator.messages.required);

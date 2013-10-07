@@ -357,7 +357,6 @@ class JQueryValidation {
 	protected function addExtraFiles() {
 		$extraFiles = array(
 			self::$module .'/javascript/libs/jquery.metadata.js',
-			self::$module .'/javascript/libs/moment.min.js',
 			self::$module .'/javascript/libs/date.js',
 		);
 		Requirements::combine_files('jquery.validation.extras.js', $extraFiles);
