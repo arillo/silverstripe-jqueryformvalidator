@@ -1,0 +1,57 @@
+# JQueryValidation
+
+Provides forms with jquery.validation functionality.
+
+## Usage
+Start up validation to a give form like this:
+
+	$form = new Form(
+		$this,
+		'Form',
+		$fields,
+		new FieldList(
+			new FormAction(
+				'FormHandler',
+				'Submit'
+			)
+		),
+		RequiredFields::create(....)
+	);
+
+	$validation = JQueryValidation::create($form);
+
+### JQueryValidation->generate()
+For automated creation use:
+
+	// then you can either use automated creation like this:
+	// this will inspect all form fields and add their validation methods.
+	// It also will add required checks provided by form's RequiredFields.
+	$validation->generate();
+
+	// It is also possible to provide custom error messages and behaviour through passing a config array like this:
+	$validation->generate(array(
+		'messages' => array(
+			'CheckboxField_DATA' => array(
+				'required' => 'Custom message'
+			)
+		)
+	));
+	// Expected hooks are messages, rules, groups.
+
+### JQueryValidation->custom()
+If you want to provide your own validation file you can use this:
+
+	$validation->custom('path/to/your.js');
+
+	// It is also possible to provide information about which additional js files shoul be loaded, like this:
+	$validation->custom(
+		'path/to/your.js',
+		array(
+			'additionalMethods' => true,
+			'metaData' => true,
+			'moment' => true
+		)
+	);
+
+## TODO:
+* add UploadField support

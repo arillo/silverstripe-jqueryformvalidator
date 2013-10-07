@@ -12,11 +12,12 @@ class JQueryValidation {
 	 * @var string
 	 */
 	public static $module = 'jquery-validator';
+
 	/**
 	 * Default settings
 	 * @var array
 	 */
-	private static $config = array(
+	public static $base_config = array(
 		'defaults' => array(
 			'errorClass' => 'required', // css class for errors
 			'validClass' => 'valid', // css class for valid fields
@@ -25,16 +26,41 @@ class JQueryValidation {
 			'ignore' => ':hidden', // selector or fields that should be ingnored
 			'required' => 'required', // css class for required fields
 			'fileMissing' => 'fileMissing',
-			'pwdMinLength' => 5 // password min length
+			'pwMinLength' => 5 // password min length
 		)
 	);
 
+	/**
+	 * Factory
+	 * @param  Form $form
+	 * @return JQueryValidation
+	 */
+	public static function create($form) {
+		return new JQueryValidation($form);
+	}
+
+	/**
+	 * The Form we want to validate
+	 * @var Form
+	 */
 	protected $form;
 
+	/**
+	 * Instance configuration
+	 * @var array
+	 */
+	protected $config = array();
+
+	/**
+	 * __construct description
+	 * @param Form $form
+	 */
 	public function __construct($form) {
 		if (!$form instanceof Form) throw new InvalidArgumentException('$form must be a Form instance');
 		$this->form = $form;
-		self::$config['defaults']['errorMessage'] = _t('JQueryValidation.DEFAULT_ERROR', 'Please check the input of this field.');
+		self::$base_config['defaults']['errorMessage'] = _t('JQueryValidation.DEFAULT_ERROR', 'Please check the input of this field.');
+		// create the instance config
+		$this->config = array_merge($this->config, self::$base_config);
 	}
 
 	/**
@@ -73,7 +99,24 @@ class JQueryValidation {
 
 	/**
 	 * Provides a form with jquery validation.
-	 * Generates jquery.validation by required fields attached to the $form.
+	 * Generates jquery.validation by required fields attached to $form.
+	 * Behaviour/output can be overwritten by $config, like this:
+	 * array(
+	 *	'messages' => array(
+	 *		'MyCheckBoxField' => array(
+	 *			'required' => 'Some custom message here.'
+	 *		)
+	 *	),
+	 *	'rules' => array(
+	 *		'MyCheckBoxField' => array(
+	 *			'required' => true'
+	 *		)
+	 *	),
+	 *	'groups' => array(
+	 *		'SomeGroup' = "field1 field2";
+	 *	)
+	 *);
+	 * CAUTION: this can be tricky and can lead to unexpected behaviour, if done wrong.
 	 * 
 	 * @param  Form $form
 	 * @param  array  $config
@@ -84,7 +127,7 @@ class JQueryValidation {
 
 		// merge default settings
 		if (isset($config['defaults']) && is_array($config['defaults'])) {
-			self::$config['defaults'] = array_merge(self::$config['defaults'], $config['defaults']);
+			$this->config['defaults'] = array_merge($this->config['defaults'], $config['defaults']);
 		}
 
 		$rules = array();
@@ -107,7 +150,7 @@ class JQueryValidation {
 						$field2 = $formField->Name . '[_ConfirmPassword]';
 						$rules[$field1] = array(
 							'required' => $required,
-							'minlength' => self::$config['defaults']['pwdMinLength']
+							'minlength' => $this->config['defaults']['pwMinLength']
 						);
 						$rules[$field2] = array(
 							'required' => $required,
@@ -116,7 +159,7 @@ class JQueryValidation {
 						$messages[$field1] = array(
 							'minlength' => sprintf(
 								_t('JQueryValidation.PASSWORD_TOO_SHORT', 'Password should be at least %s characters long.'),
-								self::$config['defaults']['pwdMinLength']
+								$this->config['defaults']['pwMinLength']
 							)
 						);
 						$messages[$field2] = array(
@@ -226,12 +269,12 @@ class JQueryValidation {
 					case 'PasswordField':
 						$rules[$formField->Name] = array(
 							'required' => $required,
-							'minlength' => self::$config['defaults']['pwdMinLength']
+							'minlength' => self::$base_config['defaults']['pwMinLength']
 						);
 						$messages[$formField->Name] = array(
 							'minlength' => sprintf(
 								_t('JQueryValidation.PASSWORD_TOO_SHORT', 'Password should be at least %s characters long.'),
-								self::$config['defaults']['pwdMinLength']
+								$this->config['defaults']['pwMinLength']
 							)
 						);
 						if ($required) {
@@ -261,18 +304,23 @@ class JQueryValidation {
 			if (count($messages)) $validation['messages'] = $messages;
 			if (count($groups)) $validation['groups'] = $groups;
 
+			$validation = array_merge($validation, $config);
+
 			$jsVars = array(
 				'FormID' => "#{$this->form->FormName()}",
 				'Validation' => json_encode($validation),
-				'DefaultErrorMessage' => self::$config['defaults']['errorMessage']
+				'DefaultErrorMessage' => $this->config['defaults']['errorMessage']
 			);
 
 			Requirements::javascript(self::$module .'/javascript/libs/jquery.validate.min.js');
 
 			// load extra js files
 			if ($requireExtraJs) {
-				Requirements::javascript(self::$module .'/javascript/libs/jquery.metadata.js');
-				Requirements::javascript(self::$module .'/javascript/libs/moment.min.js');
+				$extraFiles = array(
+					self::$module .'/javascript/libs/jquery.metadata.js',
+					self::$module .'/javascript/libs/moment.min.js'
+				);
+				Requirements::combine_files('jquery.validation.extras.js', $extraFiles);
 			}
 
 			Requirements::javascriptTemplate(
