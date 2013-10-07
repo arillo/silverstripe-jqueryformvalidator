@@ -2,20 +2,30 @@
 	$(document).ready(function(){
 		var $form = $("$FormID"),
 			validation = JSON.parse("$Validation");
+
+		// default error message
+		$.validator.messages.required = "$DefaultErrorMessage";
 		// time validation
 		$.validator.addMethod("time", function(value, element) {
 			var $el = $(element),
 				format = $el.metadata().timeformat,
 				name = $el.attr('name'),
 				fieldRule = this.settings.rules[name];
-			if (!fieldRule) return true;
+			if (!fieldRule)
+				return true;
+
 			if (fieldRule.required
 				|| (fieldRule.required == false && value)
 			) {
 				return window.moment(value, format).isValid();
 			}
 			return true;
-		}, "time error");
+		}, $.validator.messages.required);
+
+		// textarea validation
+		$.validator.addMethod("textarea", function(value, element) {
+			return (value !== undefined);
+		}, $.validator.messages.required);
 		// override date validation
 		$.validator.methods["date"] = function(value, element) {
 			var $el = $(element),
@@ -34,13 +44,17 @@
 			var type = element.attr("type");
 			if (element.parents('.datetime').size() > 0) {
 				error.insertAfter(element.parents('.datetime')[0]);
+			} else if (element.parents('.confirmedpassword').size() > 0) {
+				error.insertAfter(element.parents('.confirmedpassword')[0]);
 			} else {
-				if (!type) {
+				/*
+				if (!type)
 					if (element.hasClass('dropdown')) type = 'dropdown';
-				}
-				if (type) {
-						error.insertAfter(element.parent("div"));
-				}
+
+				console.log(type);
+				if (type)
+					error.insertAfter(element.parent("div"));
+				*/
 				/*
 				type = type || 'none';
 
@@ -53,11 +67,14 @@
 						break;
 				}
 				*/
+				error.insertAfter(element.parent("div"));
 			}
 		};
-		//console.log(JSON.parse("$Validation"));
+		validation.submitHandler = function(form) {
+			console.log(form);
+			//form.submit();
+			//e.preventDefault();
+		};
 		$form.validate(validation);
-		//var obj = JSON.parse("$Validation");
-		//console.log(obj.Rules.Rule);
 	});
 })(jQuery);
