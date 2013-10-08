@@ -78,7 +78,6 @@ class JQueryValidation {
 	 * @param  array  $config
 	 */
 	public function custom($jsFile, $config = array()) {
-		$form = $this->form;
 		if (!is_string($jsFile)) {
 			throw new InvalidArgumentException("$jsFile must be a string!");
 		}
@@ -117,7 +116,7 @@ class JQueryValidation {
 	 *		)
 	 *	),
 	 *	'groups' => array(
-	 *		'SomeGroup' = "field1 field2";
+	 *		'SomeGroup' => "field1 field2";
 	 *	)
 	 *);
 	 * CAUTION: this can be tricky and can lead to unexpected behaviour, if done wrong.
@@ -321,9 +320,9 @@ class JQueryValidation {
 				}
 			}
 
-			if (count($rules)) $validation['rules'] = $rules;
-			if (count($messages)) $validation['messages'] = $messages;
-			if (count($groups)) $validation['groups'] = $groups;
+			$validation['rules'] = $rules;
+			$validation['messages'] = $messages;
+			$validation['groups'] = $groups;
 
 			if (isset($config['rules']) && is_array($config['rules'])) {
 				$validation['rules'] = array_merge($validation['rules'], $config['rules']);
@@ -344,9 +343,8 @@ class JQueryValidation {
 			Requirements::javascript(self::$module .'/javascript/libs/jquery.validate.min.js');
 
 			// load extra js files
-			if ($requireExtraJs) {
-				$this->addExtraFiles();
-			}
+			if ($requireExtraJs) $this->addExtraFiles();
+
 			$this->createMainJS($jsVars);
 		}
 	}
