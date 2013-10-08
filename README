@@ -18,17 +18,16 @@ Start up validation to a give form like this:
 		RequiredFields::create(....)
 	);
 
-	$validation = JQueryValidation::create($form);
 
 ### JQueryValidation->generate()
 For automated creation use:
 
 	// This will inspect all form fields and add their validation methods.
 	// It also will add required checks provided by form's RequiredFields.
-	$validation->generate();
+	JQueryValidation::create($form)->generate();
 
 	// It is also possible to provide custom error messages and behaviour through passing a config array like this:
-	$validation->generate(array(
+	JQueryValidation::create($form)->generate(array(
 		'messages' => array(
 			'CheckboxField_DATA' => array(
 				'required' => 'Custom message'
@@ -40,14 +39,15 @@ For automated creation use:
 ### JQueryValidation->custom()
 If you want to provide your own validation file you can use this:
 
-	$validation->custom('path/to/your.js');
+	JQueryValidation::create($form)->custom('path/to/your.js');
 
 	// It is also possible to provide information about which additional js files should be loaded, like this:
-	$validation->custom(
+	JQueryValidation::create($form)->custom(
 		'path/to/your.js',
 		array(
-			'additionalMethods' => true,
-			'metaData' => true,
-			'moment' => true
+			'additionalMethods' => true,	// load additional-methods.min.js
+			'metaData' => true,				// load jquery.metadata.js
+			'moment' => true,				// load moment.min.js
+			'date' => true					// load date.js
 		)
 	);

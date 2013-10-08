@@ -30,7 +30,8 @@ class JQueryValidation {
 	);
 
 	/**
-	 * Factory
+	 * Factory method
+	 * 
 	 * @param  Form $form
 	 * @return JQueryValidation
 	 */
@@ -69,7 +70,7 @@ class JQueryValidation {
 	 *	'additionalMethods' => true,	// load additional-methods.min.js
 	 *	'metaData' => true,				// load jquery.metadata.js
 	 *	'moment' => true,				// load moment.min.js
-	 *	'date' => true					// load moment.min.js
+	 *	'date' => true					// load date.js
 	 * )
 	 * 
 	 * 
