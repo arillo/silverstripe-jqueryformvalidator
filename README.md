@@ -4,6 +4,9 @@ Adds jquery.validation functionality to silverstripe 3.0+ forms.
 Visit http://jqueryvalidation.org/ for more information.
 
 ## Usage
+To make it work, make sure your page has jquery included. For sake of backward compartibilty for old browsers you also might load json2.js.
+Both files can be found in modulefolder/javascript/libs.
+
 Start up validation on a form like this:
 
 	$form = new Form(
