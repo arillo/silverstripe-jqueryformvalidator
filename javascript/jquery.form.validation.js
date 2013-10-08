@@ -4,10 +4,12 @@
 			validation = JSON.parse("$Validation"),
 			defaults = JSON.parse("$Defaults");
 
+		// merge validation objects
 		$.extend(validation, defaults);
 
 		// default error message
 		$.validator.messages.required = "$DefaultErrorMessage";
+
 		// time validation
 		$.validator.addMethod("time", function(value, element) {
 			var $el = $(element),
@@ -62,6 +64,7 @@
 			}
 			return false;
 		};
+
 		validation.errorPlacement = function(error, element) {
 			var type = element.attr("type");
 			if (element.parents('.datetime').size() > 0) {
@@ -74,6 +77,8 @@
 				error.insertAfter(element.parent("div"));
 			}
 		};
+
+		// fire up validator
 		$form.validate(validation);
 	});
 })(jQuery);

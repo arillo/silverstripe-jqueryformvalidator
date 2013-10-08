@@ -107,7 +107,7 @@ class JQueryValidation {
 	 * @param  array  $config
 	 * @return JQueryValidation
 	 */
-	public function custom($jsFile, $config = array()) {
+	public function custom(string $jsFile, array $config = array()) {
 		if (!is_string($jsFile)) {
 			throw new InvalidArgumentException("$jsFile must be a string!");
 		}
@@ -157,7 +157,7 @@ class JQueryValidation {
 	 * @param  array  $config
 	 * @return JQueryValidation
 	 */
-	public function generate($custom = array()) {
+	public function generate(array $custom = array()) {
 		// validate input
 		if (!is_array($custom)) throw new InvalidArgumentException("$custom must be an array!");
 
@@ -395,7 +395,7 @@ class JQueryValidation {
 	 * @param  array $jsVars
 	 * @return JQueryValidation
 	 */
-	protected function createMainJS($jsVars) {
+	protected function createMainJS(array $jsVars) {
 		Requirements::javascriptTemplate(
 			self::$module .'/javascript/jquery.form.validation.js',
 			$jsVars,
