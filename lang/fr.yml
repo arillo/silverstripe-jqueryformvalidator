@@ -1,0 +1,8 @@
+fr:
+  JQueryValidation:
+    DEFAULT_ERROR: "S'il vous plaît vérifier l'entrée de ce champ."
+    PASSWORD_TOO_SHORT: "Mot de passe doit être d'au moins %s caractères."
+    CONFIRM_PWD_ERROR: "Les mots de passe doivent être identiques."
+    REQUIRED_MESSAGE: "Ce champ est obligatoire: %s"
+    INVALID_DATE: "S'il vous plaît utiliser ce format (%s)"
+    INVALID_EMAIL: "Cette adresse email semble être invalide."

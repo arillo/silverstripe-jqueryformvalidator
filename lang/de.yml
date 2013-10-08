@@ -1,3 +1,8 @@
 de:
   JQueryValidation:
-    DEFAULT_ERROR: 'Bitte wähle eine Antwort aus.'
+    DEFAULT_ERROR: "Bitte die Eingabe überprüfen"
+    PASSWORD_TOO_SHORT: "Das Password sollte mindestens %s lang sein."
+    CONFIRM_PWD_ERROR: "Passwörter müssen übereinstimmen."
+    REQUIRED_MESSAGE: "Dieses Feld wird benötigt: %s"
+    INVALID_DATE: "Bitte dieses Format benutzen (%s)"
+    INVALID_EMAIL: "Diese Email-Adresses scheint ungültig zu sein."
