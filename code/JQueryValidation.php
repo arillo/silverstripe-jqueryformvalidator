@@ -157,7 +157,6 @@ class JQueryValidation {
 	 * @param  array  $config
 	 * @return JQueryValidation
 	 */
-	//public function generate($config = array(), $custom = array()) {
 	public function generate($custom = array()) {
 		// validate input
 		if (!is_array($custom)) throw new InvalidArgumentException("$custom must be an array!");
