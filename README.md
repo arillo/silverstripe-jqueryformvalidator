@@ -1,6 +1,6 @@
 # JQueryValidation
 
-Provides silverstripe forms with jquery.validation functionality.
+Adds jquery.validation functionality to silverstripe 3.0+ forms.
 Visit http://jqueryvalidation.org/ for more information.
 
 ## Usage
@@ -61,9 +61,9 @@ If you want to provide your own validation file you can use this:
 	JQueryValidation::create($form)->custom(
 		'path/to/your.js',
 		array(
-			'additionalMethods' => true,	// load additional-methods.min.js
-			'metaData' => true,				// load jquery.metadata.js
-			'moment' => true,				// load moment.min.js
-			'date' => true					// load date.js
+			'additionalMethods',	// load additional-methods.min.js
+			'metaData',				// load jquery.metadata.js
+			'moment',				// load moment.min.js
+			'date'					// load date.js
 		)
 	);
