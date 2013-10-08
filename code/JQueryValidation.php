@@ -25,7 +25,6 @@ class JQueryValidation {
 			'errorMessage' => 'Please check the input of this field.', // default/ fallback error message
 			'ignore' => ':hidden', // selector or fields that should be ingnored
 			'required' => 'required', // css class for required fields
-			'fileMissing' => 'fileMissing',
 			'pwMinLength' => 5 // password min length
 		)
 	);
@@ -297,10 +296,10 @@ class JQueryValidation {
 						if ($required) {
 							$field = $formField->Name . '[Uploads][]';
 							$rules[$field] = array(
-								'required' => true
+								'ss-uploadfield' => 'ss-uploadfield'
 							);
 							$messages[$field] = array(
-								'required' => sprintf(
+								'ss-uploadfield' => sprintf(
 									_t('JQueryValidation.REQUIRED_MESSAGE', 'This field is required: %s'),
 									$formField->Title()
 								)

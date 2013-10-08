@@ -51,6 +51,3 @@ If you want to provide your own validation file you can use this:
 			'moment' => true
 		)
 	);
-
-## TODO:
-* add UploadField support

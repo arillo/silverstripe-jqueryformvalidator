@@ -20,7 +20,7 @@
 			) {
 				return Date.isValid(value, format);
 			}
-			return true;
+			return false;
 		}, $.validator.messages.required);
 
 		// textarea validation
@@ -32,19 +32,13 @@
 		$.validator.addMethod("ss-uploadfield", function(value, element) {
 			var $el = $(element),
 				$wrap = $el.parents("div.middleColumn"),
-				uploads = $wrap.children("ul.files").find("li").size(),
+				uploads = $wrap.children("ul.ss-uploadfield-files").find("li").size(),
 				name = $el.attr('name'),
 				fieldRule = this.settings.rules[name];
 
 			if (!fieldRule || uploads > 0)
 				return true;
-/*
-			if (fieldRule.required
-				|| (fieldRule.required == true && uploads > 0)
-			) {
-				return true;
-			}
-*/
+
 			return false;
 		}, $.validator.messages.required);
 
@@ -62,14 +56,12 @@
 				|| (fieldRule.required == false && value)
 			) {
 				return Date.isValid(value, format);
-				//return window.moment(value, format).isValid();
 			}
-			return true;
+			return false;
 		};
 		validation.errorPlacement = function(error, element) {
+			//console.log(element);
 			var type = element.attr("type");
-			//console.log(element.parents('.upload').size() > 0);
-			//console.log(element.hasClass("ss-uploadfield"));
 			if (element.parents('.datetime').size() > 0) {
 				error.insertAfter(element.parents('.datetime')[0]);
 			} else if (element.parents('.confirmedpassword').size() > 0) {
@@ -77,33 +69,8 @@
 			} else if (element.parents('.upload').size() > 0) {
 				error.insertAfter(element.parents('.upload')[0]);
 			} else {
-				/*
-				if (!type)
-					if (element.hasClass('dropdown')) type = 'dropdown';
-
-				console.log(type);
-				if (type)
-					error.insertAfter(element.parent("div"));
-				*/
-				/*
-				type = type || 'none';
-
-				switch(type.toLowerCase()) {
-					case 'none':
-						break;
-					default:
-						error.insertAfter(element.parent("div"));
-						//error.insertAfter(element.parent("p"));
-						break;
-				}
-				*/
 				error.insertAfter(element.parent("div"));
 			}
-		};
-		validation.submitHandler = function(form) {
-			console.log(form);
-			//form.submit();
-			//e.preventDefault();
 		};
 		$form.validate(validation);
 	});
