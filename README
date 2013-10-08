@@ -3,7 +3,7 @@
 Provides forms with jquery.validation functionality.
 
 ## Usage
-Start up validation to a give form like this:
+Start up validation on a form like this:
 
 	$form = new Form(
 		$this,
