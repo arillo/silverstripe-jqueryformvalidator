@@ -1,6 +1,7 @@
 # JQueryValidation
 
-Provides forms with jquery.validation functionality.
+Provides silverstripe forms with jquery.validation functionality.
+Visit http://jqueryvalidation.org/ for more information.
 
 ## Usage
 Start up validation on a form like this:
@@ -18,12 +19,27 @@ Start up validation on a form like this:
 		RequiredFields::create(....)
 	);
 
+### JQueryValidation::create($form, $config)
+Expects a form and an optional config array, which overrides values from the base config. Take a look into
+JQueryValidation::$base_config for available key / value pairs.
+
+	JQueryValidation::create(
+		$form,
+		array(
+			'validator' => array(
+				'errorElement' => 'div'
+			)
+			...
+			..
+			.
+		)
+	);
 
 ### JQueryValidation->generate()
 For automated creation use:
 
 	// This will inspect all form fields and add their validation methods.
-	// It also will add required checks provided by form's RequiredFields.
+	// It also will add required checks provided by the form's RequiredFields.
 	JQueryValidation::create($form)->generate();
 
 	// It is also possible to provide custom error messages and behaviour through passing a config array like this:

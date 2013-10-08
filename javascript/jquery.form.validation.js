@@ -1,7 +1,10 @@
 ;(function($){
 	$(document).ready(function(){
 		var $form = $("$FormID"),
-			validation = JSON.parse("$Validation");
+			validation = JSON.parse("$Validation"),
+			defaults = JSON.parse("$Defaults");
+
+		$.extend(validation, defaults);
 
 		// default error message
 		$.validator.messages.required = "$DefaultErrorMessage";
@@ -32,7 +35,7 @@
 		$.validator.addMethod("ss-uploadfield", function(value, element) {
 			var $el = $(element),
 				$wrap = $el.parents("div.middleColumn"),
-				uploads = $wrap.children("ul.ss-uploadfield-files").find("li").size(),
+				uploads = $wrap.children("ul.files").find("li").size(),
 				name = $el.attr('name'),
 				fieldRule = this.settings.rules[name];
 
@@ -60,7 +63,6 @@
 			return false;
 		};
 		validation.errorPlacement = function(error, element) {
-			//console.log(element);
 			var type = element.attr("type");
 			if (element.parents('.datetime').size() > 0) {
 				error.insertAfter(element.parents('.datetime')[0]);
@@ -71,6 +73,9 @@
 			} else {
 				error.insertAfter(element.parent("div"));
 			}
+		};
+		$.validator.onsubmit = function(form) {
+
 		};
 		$form.validate(validation);
 	});

@@ -1,6 +1,7 @@
 <?php
 /**
  * Provides forms with jquery.validate functionality.
+ * Visit http://jqueryvalidation.org/ for more information.
  *
  * @package jquery-validator
  * @author bumbus@arillo <sf@arillo.net>
@@ -19,24 +20,46 @@ class JQueryValidation {
 	 */
 	public static $base_config = array(
 		'defaults' => array(
+			'errorMessage' => 'Please check the input of this field.', // default/ fallback error message
+			'pwMinLength' => 5 // password min length
+		),
+		'validator' => array(
 			'errorClass' => 'required', // css class for errors
 			'validClass' => 'valid', // css class for valid fields
 			'errorElement' => 'label', // html wrapper element for errors
-			'errorMessage' => 'Please check the input of this field.', // default/ fallback error message
 			'ignore' => ':hidden', // selector or fields that should be ingnored
 			'required' => 'required', // css class for required fields
-			'pwMinLength' => 5 // password min length
 		)
 	);
 
 	/**
-	 * Factory method
+	 * Recursive extension of $array1 with $array2.
+	 * 
+	 * @param  array  $array1
+	 * @param  array  $array2
+	 * @return array
+	 */
+	public static function array_extend(array $array1, array $array2) {
+		$merged = $array1;
+		foreach ($array2 as $key => $value) {
+			if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+				$merged[$key] = self::array_extend($merged[$key], $value);
+			} else {
+				$merged[$key] = $value;
+			}
+		}
+		return $merged;
+	}
+
+	/**
+	 * Factory method.
 	 * 
 	 * @param  Form $form
+	 * @param  array $config
 	 * @return JQueryValidation
 	 */
-	public static function create($form) {
-		return new JQueryValidation($form);
+	public static function create(Form $form, array $config = array()) {
+		return new JQueryValidation($form, $config);
 	}
 
 	/**
@@ -52,15 +75,21 @@ class JQueryValidation {
 	protected $config = array();
 
 	/**
-	 * __construct description
+	 * Constructor, sets up the config for this instance. If $config with the same signature is provided it will
+	 * extend / override values in {@see $base_config}.
+	 * 
 	 * @param Form $form
+	 * @param array $config
 	 */
-	public function __construct($form) {
+	public function __construct(Form $form, array $config = array()) {
+		// validate input
 		if (!$form instanceof Form) throw new InvalidArgumentException('$form must be a Form instance');
 		$this->form = $form;
+
+		// translatable default error message
 		self::$base_config['defaults']['errorMessage'] = _t('JQueryValidation.DEFAULT_ERROR', 'Please check the input of this field.');
-		// create the instance config
-		$this->config = array_merge($this->config, self::$base_config);
+		// create instance config
+		$this->config = self::array_extend(self::$base_config, $config);
 	}
 
 	/**
@@ -76,6 +105,7 @@ class JQueryValidation {
 	 * 
 	 * @param  string $jsFile path to custom js file
 	 * @param  array  $config
+	 * @return JQueryValidation
 	 */
 	public function custom($jsFile, $config = array()) {
 		if (!is_string($jsFile)) {
@@ -85,26 +115,28 @@ class JQueryValidation {
 			throw new InvalidArgumentException("$config must be an array!");
 		}
 		Requirements::javascript(self::$module .'/javascript/libs/jquery.validate.min.js');
-		if (isset($config['metaData']) && $config['metaData']) {
-			Requirements::javascript(self::$module .'/javascript/libs/jquery.metadata.js');
-		}
-		if (isset($config['additionalMethods']) && $config['additionalMethods']) {
-			Requirements::javascript(self::$module .'/javascript/libs/additional-methods.min.js');
-		}
-		if (isset($config['moment']) && $config['moment']) {
-			Requirements::javascript(self::$module .'/javascript/libs/moment.min.js');
-		}
-		if (isset($config['date']) && $config['date']) {
-			Requirements::javascript(self::$module .'/javascript/libs/date.js');
+
+		$modules = array(
+			'metadata' => self::$module .'/javascript/libs/jquery.metadata.js',
+			'additionalMethods' => self::$module .'/javascript/libs/additional-methods.min.js',
+			'moment' => self::$module .'/javascript/libs/moment.min.js',
+			'date' => self::$module .'/javascript/libs/date.js'
+		);
+
+		foreach ($config as $key) {
+			if (isset($modules[$key])) {
+				Requirements::javascript($modules[$key]);
+			}
 		}
 		Requirements::javascript($jsFile);
+		return $this;
 	}
 
 	/**
 	 * Provides a form with jquery validation.
 	 * Generates jquery.validation by required fields attached to $form.
-	 * Behaviour/output can be overwritten by $config, like this:
-	 * array(
+	 * Behaviour/output can be overwritten by $custom, like this:
+	 * $validation->generate(array(
 	 *	'messages' => array(
 	 *		'MyCheckBoxField' => array(
 	 *			'required' => 'Some custom message here.'
@@ -118,20 +150,20 @@ class JQueryValidation {
 	 *	'groups' => array(
 	 *		'SomeGroup' => "field1 field2";
 	 *	)
-	 *);
+	 *));
 	 * CAUTION: this can be tricky and can lead to unexpected behaviour, if done wrong.
 	 * 
 	 * @param  Form $form
 	 * @param  array  $config
+	 * @return JQueryValidation
 	 */
-	public function generate($config = array()) {
+	//public function generate($config = array(), $custom = array()) {
+	public function generate($custom = array()) {
 		// validate input
-		if (!is_array($config)) throw new InvalidArgumentException("$config must be an array!");
+		if (!is_array($custom)) throw new InvalidArgumentException("$custom must be an array!");
 
-		// merge default settings
-		if (isset($config['defaults']) && is_array($config['defaults'])) {
-			$this->config['defaults'] = array_merge($this->config['defaults'], $config['defaults']);
-		}
+		// extend config
+		$this->config = self::array_extend($this->config, $custom);
 
 		$rules = array();
 		$messages = array();
@@ -296,7 +328,7 @@ class JQueryValidation {
 						if ($required) {
 							$field = $formField->Name . '[Uploads][]';
 							$rules[$field] = array(
-								'ss-uploadfield' => 'ss-uploadfield'
+								'required' => 'ss-uploadfield'
 							);
 							$messages[$field] = array(
 								'ss-uploadfield' => sprintf(
@@ -324,19 +356,13 @@ class JQueryValidation {
 			$validation['messages'] = $messages;
 			$validation['groups'] = $groups;
 
-			if (isset($config['rules']) && is_array($config['rules'])) {
-				$validation['rules'] = array_merge($validation['rules'], $config['rules']);
-			}
-			if (isset($config['messages']) && is_array($config['messages'])) {
-				$validation['messages'] = array_merge($validation['messages'], $config['messages']);
-			}
-			if (isset($config['groups']) && is_array($config['groups'])) {
-				$validation['groups'] = array_merge($validation['groups'], $config['groups']);
-			}
+			// extend $validation with $custom
+			$validation = self::array_extend($validation, $custom);
 
 			$jsVars = array(
 				'FormID' => "#{$this->form->FormName()}",
 				'Validation' => json_encode($validation),
+				'Defaults'=> json_encode($this->config['validator']),
 				'DefaultErrorMessage' => $this->config['defaults']['errorMessage']
 			);
 
@@ -346,11 +372,14 @@ class JQueryValidation {
 			if ($requireExtraJs) $this->addExtraFiles();
 
 			$this->createMainJS($jsVars);
+			return $this;
 		}
 	}
 
 	/**
 	 * Inject additional JS files
+	 * 
+	 * @return JQueryValidation
 	 */
 	protected function addExtraFiles() {
 		$extraFiles = array(
@@ -358,11 +387,14 @@ class JQueryValidation {
 			self::$module .'/javascript/libs/date.js',
 		);
 		Requirements::combine_files('jquery.validation.extras.js', $extraFiles);
+		return $this;
 	}
 
 	/**
 	 * Inject main validation script
+	 * 
 	 * @param  array $jsVars
+	 * @return JQueryValidation
 	 */
 	protected function createMainJS($jsVars) {
 		Requirements::javascriptTemplate(
@@ -370,5 +402,6 @@ class JQueryValidation {
 			$jsVars,
 			'JQueryValidation.VALIDATOR'
 		);
+		return $this;
 	}
 }
