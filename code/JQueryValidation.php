@@ -1,6 +1,6 @@
 <?php
 /**
- * Provides forms with jquery.validate functionality.
+ * Adds jquery.validation functionality to silverstripe 3.0+ forms.
  * Visit http://jqueryvalidation.org/ for more information.
  *
  * @package jquery-validator
