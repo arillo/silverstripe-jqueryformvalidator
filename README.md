@@ -65,7 +65,7 @@ If you want to provide your own validation file you can use this:
 		'path/to/your.js',
 		array(
 			'additionalMethods',	// load additional-methods.min.js
-			'metaData',				// load jquery.metadata.js
+			'metadata',				// load jquery.metadata.js
 			'moment',				// load moment.min.js
 			'date'					// load date.js
 		)
