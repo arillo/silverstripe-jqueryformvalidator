@@ -27,7 +27,7 @@ class JQueryValidation {
 			'errorClass' => 'required', // css class for errors
 			'validClass' => 'valid', // css class for valid fields
 			'errorElement' => 'label', // html wrapper element for errors
-			'ignore' => ':hidden', // selector or fields that should be ingnored
+			'ignore' => ':hidden', // selector or fields that should be ignored
 			'required' => 'required', // css class for required fields
 		)
 	);
@@ -178,6 +178,7 @@ class JQueryValidation {
 			foreach ($formFields as $formField) {
 				$required = array_search($formField->Name, $requiredFields);
 				$required = (is_numeric($required) && ($required >= 0)) ? true : false;
+
 				switch ($formField->class) {
 					case 'ConfirmedPasswordField':
 						$field1 = $formField->Name . '[_Password]';
@@ -323,6 +324,7 @@ class JQueryValidation {
 							);
 						}
 						break;
+
 					case 'UploadField':
 						if ($required) {
 							$field = $formField->Name . '[Uploads][]';
@@ -337,6 +339,7 @@ class JQueryValidation {
 							);
 						}
 						break;
+
 					default:
 						$rules[$formField->Name] = array(
 							'required' => $required
@@ -370,7 +373,9 @@ class JQueryValidation {
 			// load extra js files
 			if ($requireExtraJs) $this->addExtraFiles();
 
+			// inject main js
 			$this->createMainJS($jsVars);
+
 			return $this;
 		}
 	}
