@@ -74,9 +74,6 @@
 				error.insertAfter(element.parent("div"));
 			}
 		};
-		$.validator.onsubmit = function(form) {
-
-		};
 		$form.validate(validation);
 	});
 })(jQuery);
