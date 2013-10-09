@@ -107,7 +107,7 @@ class JQueryValidation {
 	 * @param  array  $config
 	 * @return JQueryValidation
 	 */
-	public function custom(string $jsFile, array $config = array()) {
+	public function custom($jsFile, array $config = array()) {
 		if (!is_string($jsFile)) {
 			throw new InvalidArgumentException("$jsFile must be a string!");
 		}
