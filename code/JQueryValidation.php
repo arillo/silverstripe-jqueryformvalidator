@@ -24,7 +24,7 @@ class JQueryValidation {
 			'pwMinLength' => 5 // password min length
 		),
 		'validator' => array(
-			'errorClass' => 'required', // css class for errors
+			'errorClass' => 'error', // css class for errors
 			'validClass' => 'valid', // css class for valid fields
 			'errorElement' => 'label', // html wrapper element for errors
 			'ignore' => ':hidden', // selector or fields that should be ignored
