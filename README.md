@@ -87,7 +87,6 @@ If you want to provide your own validation file you can use this:
 * TextareaField
 * TextField
 
-
 ### Validation types jquery.validator ships
 
 Standard:
@@ -115,6 +114,7 @@ Additional methods:
 * extension – Makes the element require a certain file extension.
 * phoneUS – Validate for valid US phone number.
 
+See http://jqueryvalidation.org/documentation/ for more info.
 
 Some of this methods are automatically invoked if JQueryValidation->generate() is used.
 Extra functionality can be added by adding them into $custom parameter. The following example creates a
