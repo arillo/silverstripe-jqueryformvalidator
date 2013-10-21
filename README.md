@@ -70,3 +70,18 @@ If you want to provide your own validation file you can use this:
 			'date'					// load date.js
 		)
 	);
+
+### Supported fields
+* CheckboxField
+* ConfirmedPasswordField
+* DropdownField
+* DateField
+* DatetimeField
+* EmailField
+* PasswordField
+* OptionsetField
+* NumericField
+* UploadField
+* TimeField
+* TextareaField
+* TextField

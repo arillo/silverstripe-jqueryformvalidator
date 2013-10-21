@@ -28,7 +28,7 @@ class JQueryValidation {
 			'validClass' => 'valid', // css class for valid fields
 			'errorElement' => 'label', // html wrapper element for errors
 			'ignore' => ':hidden', // selector or fields that should be ignored
-			'required' => 'required', // css class for required fields
+			'required' => 'required' // css class for required fields
 		)
 	);
 
@@ -180,6 +180,7 @@ class JQueryValidation {
 				$required = (is_numeric($required) && ($required >= 0)) ? true : false;
 
 				switch ($formField->class) {
+					// composite field, 2 passwordfields, should be equal
 					case 'ConfirmedPasswordField':
 						$field1 = $formField->Name . '[_Password]';
 						$field2 = $formField->Name . '[_ConfirmPassword]';
@@ -189,7 +190,7 @@ class JQueryValidation {
 						);
 						$rules[$field2] = array(
 							'required' => $required,
-							'equalTo' => "input[name='" . $field1 . "']"
+							'equalTo' => "input[name='{$field1}']"
 						);
 						$messages[$field1] = array(
 							'minlength' => sprintf(
@@ -232,7 +233,7 @@ class JQueryValidation {
 							);
 						}
 						break;
-
+					// composite field, timefield & datefield
 					case 'DatetimeField':
 						$requireExtraJs = true;
 						$field1 = $formField->Name . '[date]';
@@ -309,7 +310,7 @@ class JQueryValidation {
 					case 'PasswordField':
 						$rules[$formField->Name] = array(
 							'required' => $required,
-							'minlength' => self::$base_config['defaults']['pwMinLength']
+							'minlength' => $this->config['defaults']['pwMinLength']
 						);
 						$messages[$formField->Name] = array(
 							'minlength' => sprintf(
