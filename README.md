@@ -71,7 +71,8 @@ If you want to provide your own validation file you can use this:
 		)
 	);
 
-### Supported fields
+### Supported form fields
+
 * CheckboxField
 * ConfirmedPasswordField
 * DropdownField
@@ -85,3 +86,64 @@ If you want to provide your own validation file you can use this:
 * TimeField
 * TextareaField
 * TextField
+
+
+### Validation types jquery.validator ships
+
+Standard:
+
+* required – Makes the element required.
+* remote – Requests a resource to check the element for validity.
+* minlength – Makes the element require a given minimum length.
+* maxlength – Makes the element require a given maxmimum length.
+* rangelength – Makes the element require a given value range.
+* min – Makes the element require a given minimum.
+* max – Makes the element require a given maximum.
+* range – Makes the element require a given value range.
+* email – Makes the element require a valid email
+* url – Makes the element require a valid url
+* date – Makes the element require a date.
+* dateISO – Makes the element require an ISO date.
+* number – Makes the element require a decimal number.
+* digits – Makes the element require digits only.
+* creditcard – Makes the element require a credit card number.
+* equalTo – Requires the element to be the same as another one
+
+Additional methods:
+
+* accept – Makes a file upload accept only specified mime-types.
+* extension – Makes the element require a certain file extension.
+* phoneUS – Validate for valid US phone number.
+
+
+Some of this methods are automatically invoked if JQueryValidation->generate() is used.
+Extra functionality can be added by adding them into $custom parameter. The following example creates a
+field which validates for an url:
+
+	// adding a simple textfield to the field list
+	$fields->push(
+		TextField::create(
+			'URL',
+			'Your website'
+		)
+	);
+	...
+	..
+	.
+	// later, when starting the validation you can add url validtition to this field like this:
+	JQueryValidation::create($form)
+		->generate(
+			array(
+				'messages' => array(
+					'URL' => array(
+						'url' => 'Please enter a valid url.' // add error message
+					)
+				),
+				'rules' => array(
+					'URL' => array(
+						'url' => true // add url validation
+					)
+				)
+			)
+	);
+

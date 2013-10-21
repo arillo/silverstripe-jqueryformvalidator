@@ -341,9 +341,6 @@ class JQueryValidation {
 						}
 						break;
 
-					/**
-					 * @todo  implement this
-					 */
 					case 'NumericField':
 						$rules[$formField->Name] = array(
 							'required' => $required,
