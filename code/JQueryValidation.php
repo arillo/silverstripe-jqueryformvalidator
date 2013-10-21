@@ -177,7 +177,7 @@ class JQueryValidation {
 			$requiredFields = array_values($requiredFields);
 			foreach ($formFields as $formField) {
 				$required = array_search($formField->Name, $requiredFields);
-				$required = (is_numeric($required) && ($required >= 0)) ? true : false;
+				$required = (is_numeric($required) && ($required >= 0));
 
 				switch ($formField->class) {
 					// composite field, 2 passwordfields, should be equal
@@ -199,7 +199,7 @@ class JQueryValidation {
 							)
 						);
 						$messages[$field2] = array(
-							'equalTo' => _t('JQueryValidation.CONFIRM_PWD_ERROR', 'Passwords must be equal!')
+							'equalTo' => _t('JQueryValidation.CONFIRM_PW_ERROR', 'Passwords must be equal!')
 						);
 						if ($required) {
 							$messages[$field1]['required'] = sprintf(
@@ -420,7 +420,7 @@ class JQueryValidation {
 	 * @param  array $jsVars
 	 * @return JQueryValidation
 	 */
-	protected function createMainJS(array $jsVars) {
+	protected function createMainJS(array $jsVars = array()) {
 		Requirements::javascriptTemplate(
 			self::$module .'/javascript/jquery.form.validation.js',
 			$jsVars,
