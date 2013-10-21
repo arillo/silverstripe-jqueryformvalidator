@@ -340,6 +340,25 @@ class JQueryValidation {
 						}
 						break;
 
+					/**
+					 * @todo  implement this
+					 */
+					case 'NumericField':
+						$rules[$formField->Name] = array(
+							'required' => $required,
+							'number' => true,
+						);
+						$messages[$formField->Name] = array(
+							'number' => _t('JQueryValidation.NAN', 'Please enter an numeric value.')
+						);
+						if ($required) {
+							$messages[$formField->Name]['required'] = sprintf(
+								_t('JQueryValidation.REQUIRED_MESSAGE', 'This field is required: %s'),
+								$formField->Title()
+							);
+						}
+						break;
+
 					default:
 						$rules[$formField->Name] = array(
 							'required' => $required

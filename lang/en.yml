@@ -6,3 +6,4 @@ en:
     REQUIRED_MESSAGE: "This field is required: %s"
     INVALID_DATE: "Please use this format (%s)"
     INVALID_EMAIL: "This email address seems to be invalid."
+    NAN: "Please enter an numeric value."
