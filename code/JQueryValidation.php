@@ -12,7 +12,7 @@ class JQueryValidation {
 	 * Foldername of this module
 	 * @var string
 	 */
-	public static $module = 'jquery-validator';
+	public static $module = 'silverstripe-jqueryformvalidator';
 
 	/**
 	 * Default settings

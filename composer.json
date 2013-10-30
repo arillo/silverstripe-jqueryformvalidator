@@ -1,9 +1,9 @@
 {
-    "name": "silverstripe/jquery-validator",
+    "name": "arillo/silverstripe-jqueryformvalidator",
     "description": "Adds jquery.validation functionality to silverstripe 3.0+ forms.",
     "authors": [
         {
-            "name": "Bumbus @ Arillo",
+            "name": "Bumbus@Arillo",
             "email": "sf@arillo.net"
         }
     ],
